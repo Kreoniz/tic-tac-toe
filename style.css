@@ -7,7 +7,7 @@ body {
 .container {
     padding: 50px;
     display: grid;
-    justify-content: center;
+    justify-items: center;
 }
 
 .heading {
@@ -15,6 +15,21 @@ body {
     font-weight: 700;
 }
 
+.board {
+    font-size: 5rem;
+}
+
 .row {
     display: flex;
+}
+
+.cell {
+    border: 1px solid black;
+
+    width: 100px;
+    height: 100px;
+
+    display: grid;
+    justify-items: center;
+    align-items: center;
 }
