@@ -41,17 +41,63 @@ const GameController = (function() {
 
     const switchPlayers = () => activePlayer = activePlayer === players.first ? players.second : players.first;
 
+    function checkWin(board) {
+        const firstDiagonal = board[0][0] + board[1][1] + board[2][2];
+        if (firstDiagonal[0] && firstDiagonal[0] === firstDiagonal[1] && firstDiagonal[1] === firstDiagonal[2]) {
+            return true;
+        }
+
+        const secondDiagonal = board[0][2] + board[1][1] + board[2][0];
+        if (secondDiagonal[0] && secondDiagonal[0] === secondDiagonal[1] && secondDiagonal[1] === secondDiagonal[2]) {
+            return true;
+        }
+        
+        for (row of board) {
+            if (row[0] && row[0] === row[1] && row[1] === row[2]) {
+                return true;
+            }
+        }
+
+        for (let i = 0; i < board.length; i++) {
+            if (board[0][i] && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
+                return true;
+            }
+        }
+    }
+
+    function checkTie(board) {
+        for (let i of board) {
+            for (let j of i) {
+                if (!j) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function getGameStatus() {
+        if (checkWin(board)) {
+            return "win";
+        }
+
+        if (checkTie(board)) {
+            return "tie";
+        }
+
+        return "playable";
+    }
+
     function playMove(row, column) {
         if (!board[row][column]) {
             board[row][column] = activePlayer.mark;
             switchPlayers();
         }
-
-        return board;
     }
 
     return {
         playMove,
+        getGameStatus,
     }
 })();
 
@@ -85,8 +131,14 @@ function ScreenController() {
         const index = e.target.dataset.index;
         const [row, column] = index.split(",");
 
-        gameboard = GameController.playMove(row, column);
-        console.log(gameboard);
+        GameController.playMove(row, column);
+        const status = GameController.getGameStatus();
+        if (status.toLowerCase() === "tie") {
+            console.log("tie");
+        } else if (status.toLowerCase() == "win") {
+            console.log("win");
+        }
+
         renderBoard(root);
     }
 
