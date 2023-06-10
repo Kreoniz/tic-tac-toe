@@ -49,3 +49,10 @@ body {
 .disabled {
     background-color: grey;
 }
+
+#restartBtn {
+    font-size: 18px;
+
+    margin-top: 1rem;
+    padding: 5px 15px;
+}

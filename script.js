@@ -1,15 +1,27 @@
 const Gameboard = (function() {
-    const rows = 3;
-    const columns = 3;
+    function generateBoard() {
+        const rows = 3;
+        const columns = 3;
+        const board = [];
 
-    const gameboard = [];
+        for (let i = 0; i < rows; i++) {
+            board[i] = [];
+            for (let j = 0; j < columns; j++) {
+                board[i].push("");
+            }
+        }
+
+        return board;
+    }
+
+
+    let gameboard = generateBoard();
+
     const getBoard = () => gameboard;
 
-    for (let i = 0; i < rows; i++) {
-        gameboard[i] = [];
-        for (let j = 0; j < columns; j++) {
-            gameboard[i].push("");
-        }
+    function resetBoard() {
+        gameboard = generateBoard();
+        return gameboard;
     }
 
     function setMark(row, column, mark) {
@@ -20,6 +32,7 @@ const Gameboard = (function() {
 
     return {
         getBoard,
+        resetBoard,
         setMark,
     }
 })();
@@ -35,15 +48,17 @@ const GameController = (function() {
         first: Player("X"),
         second: Player("O"),
     }
-    const board = Gameboard.getBoard();
-
     let activePlayer = players.first;
 
     const switchPlayers = () => activePlayer = activePlayer === players.first ? players.second : players.first;
 
+    const resetActivePlayer = () => activePlayer = players.first;
+
     const getActivePlayer = () => activePlayer;
 
-    function checkWin(board) {
+    function checkWin() {
+        const board = Gameboard.getBoard();
+
         const firstDiagonal = board[0][0] + board[1][1] + board[2][2];
         if (firstDiagonal[0] && firstDiagonal[0] === firstDiagonal[1] && firstDiagonal[1] === firstDiagonal[2]) {
             return true;
@@ -67,7 +82,8 @@ const GameController = (function() {
         }
     }
 
-    function checkTie(board) {
+    function checkTie() {
+        const board = Gameboard.getBoard();
         for (let i of board) {
             for (let j of i) {
                 if (!j) {
@@ -79,6 +95,7 @@ const GameController = (function() {
     }
 
     function getGameStatus() {
+        const board = Gameboard.getBoard();
         if (checkWin(board)) {
             return "win";
         }
@@ -91,6 +108,7 @@ const GameController = (function() {
     }
 
     function playMove(row, column) {
+        let board = Gameboard.getBoard();
         if (!board[row][column]) {
             board[row][column] = activePlayer.mark;
             switchPlayers();
@@ -101,16 +119,29 @@ const GameController = (function() {
         playMove,
         getGameStatus,
         getActivePlayer,
+        resetActivePlayer,
     }
 })();
 
 function ScreenController() {
     const root = document.querySelector("#board")
     const statusDisplay = document.querySelector("#statusDisplay");
+    const restartBtn = document.querySelector("#restartBtn");
 
-    let gameboard = Gameboard.getBoard();
+    restartBtn.addEventListener("click", () => {
+        Gameboard.resetBoard();
+        GameController.resetActivePlayer();
+
+        renderBoard(root);
+
+        if (root.classList.contains("disabled")) {
+            root.classList.remove("disabled");
+        }
+    });
 
     function renderBoard(root) {
+        let gameboard = Gameboard.getBoard();
+
         root.textContent = "";
 
         for (let row = 0; row < gameboard.length; row++) {
@@ -131,6 +162,8 @@ function ScreenController() {
         }
 
         statusDisplay.textContent = `It's ${GameController.getActivePlayer().mark}'s turn!`;
+
+        root.addEventListener("click", clickHandlerBoard);
     }
 
     function clickHandlerBoard(e) {
@@ -140,24 +173,22 @@ function ScreenController() {
         const currentPlayer = GameController.getActivePlayer();
         GameController.playMove(row, column);
 
-        const status = GameController.getGameStatus();
-
         renderBoard(root);
 
-        if (status.toLowerCase() === "tie") {
+        if (GameController.getGameStatus().toLowerCase() === "tie") {
             root.classList.add("disabled");
             statusDisplay.textContent = "It's a TIE!";
             root.removeEventListener("click", clickHandlerBoard);
-        } else if (status.toLowerCase() == "win") {
+        } else if (GameController.getGameStatus().toLowerCase() == "win") {
             root.classList.add("disabled");
             statusDisplay.textContent = `The player ${currentPlayer.mark} won!`;
             root.removeEventListener("click", clickHandlerBoard);
         }
     }
 
-    renderBoard(root);
-
     root.addEventListener("click", clickHandlerBoard);
+
+    renderBoard(root);
 }
 
 ScreenController();
