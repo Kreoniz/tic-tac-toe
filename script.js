@@ -41,6 +41,8 @@ const GameController = (function() {
 
     const switchPlayers = () => activePlayer = activePlayer === players.first ? players.second : players.first;
 
+    const getActivePlayer = () => activePlayer;
+
     function checkWin(board) {
         const firstDiagonal = board[0][0] + board[1][1] + board[2][2];
         if (firstDiagonal[0] && firstDiagonal[0] === firstDiagonal[1] && firstDiagonal[1] === firstDiagonal[2]) {
@@ -98,11 +100,13 @@ const GameController = (function() {
     return {
         playMove,
         getGameStatus,
+        getActivePlayer,
     }
 })();
 
 function ScreenController() {
     const root = document.querySelector("#board")
+    const statusDisplay = document.querySelector("#statusDisplay");
 
     let gameboard = Gameboard.getBoard();
 
@@ -125,21 +129,30 @@ function ScreenController() {
             boardRow.classList.add("row");
             root.appendChild(boardRow);
         }
+
+        statusDisplay.textContent = `It's ${GameController.getActivePlayer().mark}'s turn!`;
     }
 
     function clickHandlerBoard(e) {
         const index = e.target.dataset.index;
         const [row, column] = index.split(",");
 
+        const currentPlayer = GameController.getActivePlayer();
         GameController.playMove(row, column);
+
         const status = GameController.getGameStatus();
-        if (status.toLowerCase() === "tie") {
-            console.log("tie");
-        } else if (status.toLowerCase() == "win") {
-            console.log("win");
-        }
 
         renderBoard(root);
+
+        if (status.toLowerCase() === "tie") {
+            root.classList.add("disabled");
+            statusDisplay.textContent = "It's a TIE!";
+            root.removeEventListener("click", clickHandlerBoard);
+        } else if (status.toLowerCase() == "win") {
+            root.classList.add("disabled");
+            statusDisplay.textContent = `The player ${currentPlayer.mark} won!`;
+            root.removeEventListener("click", clickHandlerBoard);
+        }
     }
 
     renderBoard(root);
