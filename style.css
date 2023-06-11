@@ -1,4 +1,9 @@
 @import url("reset.css");
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
+:root {
+    --font: Righteous, Arial, Helvetica, sans-serif;
+}
 
 *,
 *::before,
@@ -7,17 +12,17 @@
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font);
 }
 
 .container {
-    padding: 50px;
+    padding: 50px 0;
     display: grid;
     justify-items: center;
 }
 
 .heading {
-    font-size: 2rem;
+    font-size: 40px;
     font-weight: 700;
     margin-bottom: 1rem;
 }
@@ -27,6 +32,7 @@ body {
 }
 
 .cell {
+    font-family: var(--font);
     font-size: 5rem;
 
     background-color: inherit;
@@ -42,7 +48,7 @@ body {
 }
 
 .display {
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 1rem;
 }
 
@@ -51,7 +57,8 @@ body {
 }
 
 #restartBtn {
-    font-size: 18px;
+    font-size: 22px;
+    font-family: inherit;
 
     margin-top: 1rem;
     padding: 5px 15px;
