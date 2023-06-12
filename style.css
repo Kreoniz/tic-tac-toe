@@ -35,7 +35,7 @@ body {
 }
 
 .container {
-    padding: 71px 0;
+    padding: 80px 0;
     display: grid;
     justify-items: center;
 }
@@ -84,11 +84,42 @@ body {
 }
 
 .dark-mode-toggle {
+    --width: 105px;
+    --height: calc(var(--width) / 2);
+
     position: absolute;
     right: 0;
 
-    margin: 10px;
+    border: none;
+    outline: 2px solid var(--text);
 
-    width: 50px;
-    height: 50px;
+    margin: 10px 20px;
+
+    width: var(--width);
+    height: var(--height);
+    border-radius: 10px;
+}
+
+.dark-mode-toggle svg {
+    padding: 2px;
+    width: 50%;
+    aspect-ratio: 1;
+    border-radius: inherit;
+
+    background-color: darkorange;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.pressed svg {
+    transform: translateX(100%);
+    background-color: darkblue;
+}
+
+body,
+.dark-mode-toggle,
+.dark-mode-toggle svg {
+    transition: .5s ease;
 }
