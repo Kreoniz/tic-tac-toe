@@ -81,7 +81,6 @@ const GameController = (function() {
             }
         }
     }
-
     function checkTie() {
         const board = Gameboard.getBoard();
         for (let i of board) {
@@ -145,8 +144,6 @@ function ScreenController() {
         root.textContent = "";
 
         for (let row = 0; row < gameboard.length; row++) {
-            const boardRow = document.createElement("div");
-
             for (let column = 0; column < gameboard[row].length; column++) {
                 const boardCell = document.createElement("button");
 
@@ -154,11 +151,8 @@ function ScreenController() {
                 boardCell.classList.add("cell"); 
 
                 boardCell.dataset.index = [row, column];
-
-                boardRow.appendChild(boardCell);
+                root.appendChild(boardCell);
             }
-            boardRow.classList.add("row");
-            root.appendChild(boardRow);
         }
 
         statusDisplay.textContent = `It's ${GameController.getActivePlayer().mark}'s turn!`;
@@ -177,11 +171,15 @@ function ScreenController() {
 
         if (GameController.getGameStatus().toLowerCase() === "tie") {
             root.classList.add("disabled");
+
             statusDisplay.textContent = "It's a TIE!";
+
             root.removeEventListener("click", clickHandlerBoard);
         } else if (GameController.getGameStatus().toLowerCase() == "win") {
             root.classList.add("disabled");
+
             statusDisplay.textContent = `The player ${currentPlayer.mark} won!`;
+
             root.removeEventListener("click", clickHandlerBoard);
         }
     }
