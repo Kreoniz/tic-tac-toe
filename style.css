@@ -7,6 +7,9 @@
     --bg: #fff;
     --bg-secondary: lightgrey;
     --bg-disabled: grey;
+    --bg-selected: lightgrey;
+    --glow: #F29727;
+
     --text: #000;
 }
 
@@ -14,6 +17,9 @@
     --bg: #393646;
     --bg-secondary: #4F4557;
     --bg-disabled: #6D5D6E;
+    --bg-selected: #4F4557;
+    --glow: cyan;
+
     --text: #F4EEE0;
 }
 
@@ -48,24 +54,27 @@ body {
 
 .board {
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(3, 1fr);
-
-    width: 420px;
-    aspect-ratio: 1;
 }
 
 .cell {
     font-family: var(--font);
-    font-size: 100px;
+    font-size: 110px;
 
     background-color: inherit;
 
     border: 1px solid var(--bg-secondary);
+    width: 1.25em;
+    height: 1.25em;
 
     display: grid;
     justify-content: center;
     align-content: center;
+}
+
+.cell:hover {
+    cursor: pointer;
+    background-color: var(--bg-selected);
 }
 
 .display {
@@ -77,11 +86,19 @@ body {
     background-color: var(--bg-disabled);
 }
 
-#restartBtn {
+.disabled .cell:hover {
+    cursor: default;
+    background-color: inherit;
+}
+
+.restart-btn {
+    cursor: pointer;
+
     font-size: 32px;
     font-family: inherit;
 
-    margin-top: 1rem;
+    border-radius: 5px;
+
     padding: 10px 25px;
 }
 
@@ -123,12 +140,13 @@ body {
 }
 
 body,
+.restart-btn,
 .dark-mode-toggle,
 .dark-mode-toggle svg {
     transition: .5s ease;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
     .heading {
         font-size: 40px;
     }
@@ -137,17 +155,30 @@ body,
         font-size: 28px;
     }
 
-    .board {
-        width: 300px;
-    }
-
     .cell {
-        font-size: 70px;
+        font-size: 80px;
     }
 
-    #restartBtn {
+    .restart-btn {
         font-size: 24px;
         padding: 5px 15px;
     }
 }
 
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    margin-top: 20px;
+    padding: 0 20px;
+
+}
+
+.buttons > * {
+    flex: 1 0 auto;
+}
+
+.restart-btn.chosen {
+    box-shadow: 0 0 10px var(--glow);
+}
